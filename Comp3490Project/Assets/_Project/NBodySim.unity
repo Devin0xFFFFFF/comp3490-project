@@ -190,6 +190,7 @@ GameObject:
   - component: {fileID: 1837530959}
   - component: {fileID: 1837530960}
   - component: {fileID: 1837530961}
+  - component: {fileID: 1837530962}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -258,7 +259,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a81836b8579d344fb9f830177aff608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 10
+  MoveSpeed: 20
+--- !u!45 &1837530962
+Skybox:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1837530957}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: 3e8bc5155c4c9ed46a63ac64c06408f3, type: 2}
 --- !u!92 &1837530963
 Behaviour:
   m_ObjectHideFlags: 0
@@ -276,7 +285,7 @@ Camera:
   m_GameObject: {fileID: 1837530957}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_NormalizedViewPortRect:
     serializedVersion: 2
