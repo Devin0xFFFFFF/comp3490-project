@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using MeshVoxelizerProject;
+using UnityEngine;
 using VolumetricLines;
-//using SphereVoxelizerTest;
 
 namespace Comp3490Project
 {
@@ -112,9 +112,15 @@ namespace Comp3490Project
                 Vector3 fwd = transform.TransformDirection(Vector3.forward);
                 int[,,] voxels = SphereVoxelizerTest.voxels;
                 Vector3 hit = SphereVoxelizerTest.sphere.transform.TransformPoint(h.point);// world to local co-ordinites
-                Debug.LogFormat("World:{0}, Object:{1}", h.point, hit / 16);
-                SphereVoxelizerTest.voxels[(int)hit.x / 16, (int)hit.y / 16, (int)hit.z / 16] = 0;// out of bounds 
 
+                float size = 0.770306f;
+                //Box3 bounds = new Box3(SphereVoxelizerTest.meshFilter.mesh.bounds.min, SphereVoxelizerTest.meshFilter.mesh.bounds.max);
+                Vector3 scale = new Vector3(h.point.x * size, h.point.y * size, h.point.z * size);
+
+                Debug.LogFormat("World:{0}, Object:{1}", h.point, scale);
+
+                SphereVoxelizerTest.voxels[(int)(scale.x), (int)(scale.y), (int)(scale.z)] = 0;// out of bounds 
+                SphereVoxelizerTest.changes();
 
             }
         }

@@ -11,7 +11,7 @@ namespace Comp3490Project
 
     public class SphereVoxelizerTest : MonoBehaviour
     {
-        public MeshFilter meshFilter;
+        public static MeshFilter meshFilter;
         private MeshRenderer meshRenderer;
         public static int[,,] voxels;
         public static Vector3 pos;
@@ -60,15 +60,29 @@ namespace Comp3490Project
 
 
         }
-
-
-
-
-        // Update is called once per frame
-        void Update()
+        public static void changes()
         {
-            //Render();
+            Vector3[] vertices;
+            int[] triangles;
+
+
+            MarchMesh(voxels, out vertices, out triangles);
+            
+            for(int i = 0; i < meshFilter.mesh.vertexCount; i++)
+            {
+                if(meshFilter.mesh.vertices[i] != vertices[i])
+                {
+                    Debug.LogFormat("meshFilter.mesh.vertices:{0}, changed to: {vertices}", meshFilter.mesh.vertices[i], vertices[i]);
+                }
+            }
+
+            meshFilter.mesh.Clear();
+            meshFilter.mesh.vertices = vertices;
+            meshFilter.mesh.triangles = triangles;
+            meshFilter.mesh.RecalculateNormals();
+
         }
+
         private int[,,] VoxelizeMesh(Vector3[] vertices, int[] triangles, Box3 bounds, int size)
         {
             MeshVoxelizer m_voxelizer = new MeshVoxelizer(size, size, size);
@@ -107,7 +121,7 @@ namespace Comp3490Project
             return paddedArray;
         }
 
-        private void MarchMesh(int[,,] voxels, out Vector3[] vertices, out int[] triangles)
+        private static void MarchMesh(int[,,] voxels, out Vector3[] vertices, out int[] triangles)
         {
             Marching marching = new MarchingCubes();
 
@@ -119,13 +133,19 @@ namespace Comp3490Project
 
             List<Vector3> verts = new List<Vector3>();
             List<int> indices = new List<int>();
+
+            Debug.LogFormat("verts before marching:{0}", (width*height*length));
+
             marching.Generate(flatVoxels, width, height, length, verts, indices);
+            Debug.LogFormat("verts after marching:{0}", verts.Count);
+            float scalar = (float)(width * height * length)/verts.Count;
+            Debug.LogFormat("scalar:{0}", scalar);
 
             vertices = verts.ToArray();
             triangles = indices.ToArray();
         }
 
-        private float[] Convert3DIntArrayTo1DFloatArray(int[,,] array)
+        private static float[] Convert3DIntArrayTo1DFloatArray(int[,,] array)
         {
             int width = array.GetLength(0);
             int height = array.GetLength(1);
