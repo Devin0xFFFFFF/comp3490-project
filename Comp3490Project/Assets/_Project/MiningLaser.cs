@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using VolumetricLines;
+//using SphereVoxelizerTest;
 
 namespace Comp3490Project
 {
@@ -94,13 +95,27 @@ namespace Comp3490Project
                     Laser.LineWidth = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;
                     laserLight.range = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;
 
-
-                    Laser.EndPos = new Vector3(0, 0, Mathf.Lerp(0, 10000, accumulatedTime * 4));
+                    IsTargetVisible();
                 }
             }
             else if(Laser.gameObject.activeInHierarchy)
             {
                 Laser.gameObject.SetActive(false);
+            }
+        }
+        private void IsTargetVisible()
+        {
+            //SphereVoxelizerTest.pos - Laser.StartPos
+            RaycastHit h;
+            if(Physics.Raycast(Laser.transform.position, Laser.transform.TransformDirection(Vector3.forward), out h, laserLight.range))
+            {
+                Vector3 fwd = transform.TransformDirection(Vector3.forward);
+                int[,,] voxels = SphereVoxelizerTest.voxels;
+                Vector3 hit = SphereVoxelizerTest.sphere.transform.TransformPoint(h.point);// world to local co-ordinites
+                Debug.LogFormat("World:{0}, Object:{1}", h.point, hit / 16);
+                SphereVoxelizerTest.voxels[(int)hit.x / 16, (int)hit.y / 16, (int)hit.z / 16] = 0;// out of bounds 
+
+
             }
         }
     }

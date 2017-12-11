@@ -8,41 +8,31 @@ using CielaSpike;
 
 namespace Comp3490Project
 {
-    public class Deformation : MonoBehaviour
-    {
-        public bool RunOnStart = false;
-        public int VoxelSize = 16;
-        
-        private MeshFilter meshFilter;
-        private MeshRenderer meshRenderer;
 
-        private void Awake()
+    public class SphereVoxelizerTest : MonoBehaviour
+    {
+        public MeshFilter meshFilter;
+        private MeshRenderer meshRenderer;
+        public static int[,,] voxels;
+        public static Vector3 pos;
+        public static GameObject sphere;
+        private int VoxelSize = 16;
+
+        void Start()
         {
+            pos = transform.localPosition;
+            sphere = transform.gameObject;
             meshFilter = GetComponent<MeshFilter>();
             meshRenderer = GetComponent<MeshRenderer>();
+            Render();
         }
 
-        private void Start()
+        public void Render()
         {
-            if(RunOnStart)
-            {
-                this.StartCoroutineAsync(Deform());
-            }
-        }
-
-        public IEnumerator Deform()
-        {
-            yield return Ninja.JumpToUnity;
-
+           
             meshRenderer.enabled = false;
 
             Vector3[] vertices = meshFilter.mesh.vertices;
-
-            yield return Ninja.JumpBack;
-
-            vertices = WarpVertices(vertices);
-
-            yield return Ninja.JumpToUnity;
 
             meshFilter.mesh.vertices = vertices;
             meshFilter.mesh.RecalculateBounds();
@@ -50,83 +40,44 @@ namespace Comp3490Project
             int[] triangles = meshFilter.mesh.triangles;
             Box3 bounds = new Box3(meshFilter.mesh.bounds.min, meshFilter.mesh.bounds.max);
 
-            yield return Ninja.JumpBack;
-
-            int[,,] voxels = VoxelizeMesh(vertices, triangles, bounds, VoxelSize);
+            voxels = VoxelizeMesh(vertices, triangles, bounds, VoxelSize);
             voxels = Pad3DArray(voxels);
 
             MarchMesh(voxels, out vertices, out triangles);
-
-            yield return Ninja.JumpToUnity;
 
             meshFilter.mesh.Clear();
             meshFilter.mesh.vertices = vertices;
             meshFilter.mesh.triangles = triangles;
             meshFilter.mesh.RecalculateNormals();
 
-            DestroyImmediate(this.GetComponent<MeshCollider>());
-           // var collider = this.AddComponent<MeshCollider>();
-           // collider.sharedMesh = meshFilter.mesh;
-
-
             meshRenderer.enabled = true;
+
+
+            DestroyImmediate(this.GetComponent<MeshCollider>());
+            var collider = gameObject.AddComponent<MeshCollider>();
+            collider.sharedMesh = meshFilter.mesh;
+
+
+
         }
 
-        private Vector3[] WarpVertices(Vector3[] inputVertices)
+
+
+
+        // Update is called once per frame
+        void Update()
         {
-            Vector3[] vertices = inputVertices;
-            System.Random random = new System.Random();
-
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                Vector3 vec3 = vertices[i];
-                float x = vec3.x;
-                float y = vec3.y;
-                float z = vec3.z;
-                int test = 140;
-
-                vec3.x += ((y * 5) * (random.Next(100, test) / 100));
-                vec3.y -= ((x * 7) * (random.Next(100, test) / 100));
-                vec3.z -= ((y * 4.5f) * (random.Next(100, test) / 100));
-
-                vertices[i] = vec3.normalized;
-            }
-
-            int seed = random.Next(0, int.MaxValue);
-            INoise perlin = new PerlinNoise(seed, 2.0f);
-            FractalNoise fractal = new FractalNoise(perlin, 3, 1.0f);
-
-
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                Vector3 vec3 = vertices[i];
-                float scale = 50f;
-                if (random.Next(1, 2) == 1)
-                {
-                    vec3.x += fractal.Sample1D(vec3.x) * scale;
-                    vec3.y += fractal.Sample1D(vec3.y) * scale;
-                    vec3.z += fractal.Sample1D(vec3.z) * scale;
-                }
-                else
-                {
-                    vec3.x -= fractal.Sample1D(vec3.x) * scale;
-                    vec3.y -= fractal.Sample1D(vec3.y) * scale;
-                    vec3.z -= fractal.Sample1D(vec3.z) * scale;
-                }
-                vertices[i] = vec3.normalized;
-            }
-
-            return vertices;
+            //Render();
         }
-
         private int[,,] VoxelizeMesh(Vector3[] vertices, int[] triangles, Box3 bounds, int size)
         {
             MeshVoxelizer m_voxelizer = new MeshVoxelizer(size, size, size);
-            
+
             m_voxelizer.Voxelize(vertices, triangles, bounds);
 
             return m_voxelizer.Voxels;
         }
+
 
         private int[,,] Pad3DArray(int[,,] array)
         {
