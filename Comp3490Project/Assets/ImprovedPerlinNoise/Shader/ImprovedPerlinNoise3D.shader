@@ -97,7 +97,7 @@ Shader "Noise/ImprovedPerlinNoise3D"
 			
 			half4 frag (v2f i) : COLOR
 			{
-				float n = clamp(fBm(i.uv.xyz, 4) + 0.09, 0.09, 1) * i.diff;
+				float n = clamp(fBm(i.uv.xyz, 4) + 0.1, 0.1, 1) * i.diff;
 
 			    return half4(n,n,n,1);
 			}
