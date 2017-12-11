@@ -6,6 +6,8 @@ namespace Comp3490Project
 {
     public class SimCamera : MonoBehaviour
     {
+        public MainMenu MainMenu;
+
         private NBodySimManager nBodySimManager;
         private FreeCamera freeCamera;
         private AutoRotate autoRotate;
@@ -33,6 +35,16 @@ namespace Comp3490Project
             freeCamera.enabled = false;
             autoRotate.enabled = true;
             smoothFollow.enabled = true;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                nBodySimManager.BoundingSphere.SetActive(false);
+                SwitchToMenuMode();
+                MainMenu.gameObject.SetActive(true);
+            }
         }
     }
 }

@@ -56,7 +56,10 @@ namespace Comp3490Project
                 }
                 computingBodies = true;
                 this.StartCoroutineAsync(ComputeBodies());
-                //StartCoroutine(ComputeBodies());
+            }
+            else if(Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                BoundingSphere.SetActive(false);
             }
             else if(Input.GetKeyDown(KeyCode.Return))
             {
@@ -97,7 +100,6 @@ namespace Comp3490Project
 
             for (int i = 0; i < points.Length; i += step)
             {
-                //points.GetData(pointBuffer, 0, i * pointBuffer.Length, pointBuffer.Length);
                 Vector3 point = new Vector3(points[i], points[i + 1], points[i + 2]);
                 float distance = Vector3.Distance(origin, point);
                 if(distance <= distThreshold)

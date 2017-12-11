@@ -22,10 +22,5 @@ namespace Comp3490Project
         {
             return bodies;
         }
-
-        private void Update()
-        {
-
-        }
     }
 }
