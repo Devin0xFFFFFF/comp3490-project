@@ -1,41 +1,75 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ProceduralNoiseProject;
 using UnityEngine;
-using System.Diagnostics;
-using System;
 using MeshVoxelizerProject;
 using MarchingCubesProject;
+using System.Collections;
+using CielaSpike;
 
 namespace Comp3490Project
 {
     public class Deformation : MonoBehaviour
     {
-        public int size = 16;
+        public bool RunOnStart = false;
+        public int VoxelSize = 16;
         
         private MeshFilter meshFilter;
         private MeshRenderer meshRenderer;
 
-        private void Start()
+        private void Awake()
         {
             meshFilter = GetComponent<MeshFilter>();
             meshRenderer = GetComponent<MeshRenderer>();
+        }
+
+        private void Start()
+        {
+            if(RunOnStart)
+            {
+                this.StartCoroutineAsync(Deform());
+            }
+        }
+
+        public IEnumerator Deform()
+        {
+            yield return Ninja.JumpToUnity;
 
             meshRenderer.enabled = false;
 
-            Warp();
+            Vector3[] vertices = meshFilter.mesh.vertices;
 
-            int[,,] voxels = VoxelizeMesh();
+            yield return Ninja.JumpBack;
+
+            vertices = WarpVertices(vertices);
+
+            yield return Ninja.JumpToUnity;
+
+            meshFilter.mesh.vertices = vertices;
+            meshFilter.mesh.RecalculateBounds();
+
+            int[] triangles = meshFilter.mesh.triangles;
+            Box3 bounds = new Box3(meshFilter.mesh.bounds.min, meshFilter.mesh.bounds.max);
+
+            yield return Ninja.JumpBack;
+
+            int[,,] voxels = VoxelizeMesh(vertices, triangles, bounds, VoxelSize);
             voxels = Pad3DArray(voxels);
-            MarchMesh(voxels);
+
+            MarchMesh(voxels, out vertices, out triangles);
+
+            yield return Ninja.JumpToUnity;
+
+            meshFilter.mesh.Clear();
+            meshFilter.mesh.vertices = vertices;
+            meshFilter.mesh.triangles = triangles;
             meshFilter.mesh.RecalculateNormals();
 
             meshRenderer.enabled = true;
         }
 
-        public void Warp()
+        private Vector3[] WarpVertices(Vector3[] inputVertices)
         {
-            Vector3[] vertices = meshFilter.mesh.vertices;
+            Vector3[] vertices = inputVertices;
             System.Random random = new System.Random();
 
             for (int i = 0; i < vertices.Length; i++)
@@ -77,21 +111,19 @@ namespace Comp3490Project
                 vertices[i] = vec3.normalized;
             }
 
-            meshFilter.mesh.vertices = vertices;
-            meshFilter.mesh.RecalculateBounds();
+            return vertices;
         }
 
-        private int[,,] VoxelizeMesh()
+        private int[,,] VoxelizeMesh(Vector3[] vertices, int[] triangles, Box3 bounds, int size)
         {
-            Mesh mesh = meshFilter.mesh;
             MeshVoxelizer m_voxelizer = new MeshVoxelizer(size, size, size);
-            Box3 bounds = new Box3(mesh.bounds.min, mesh.bounds.max);
-            m_voxelizer.Voxelize(mesh.vertices, mesh.triangles, bounds);
+            
+            m_voxelizer.Voxelize(vertices, triangles, bounds);
 
             return m_voxelizer.Voxels;
         }
 
-        public int[,,] Pad3DArray(int[,,] array)
+        private int[,,] Pad3DArray(int[,,] array)
         {
             int width = array.GetLength(0);
             int height = array.GetLength(1);
@@ -119,7 +151,7 @@ namespace Comp3490Project
             return paddedArray;
         }
 
-        public void MarchMesh(int[,,] voxels)
+        private void MarchMesh(int[,,] voxels, out Vector3[] vertices, out int[] triangles)
         {
             Marching marching = new MarchingCubes();
 
@@ -129,78 +161,33 @@ namespace Comp3490Project
 
             float[] flatVoxels = Convert3DIntArrayTo1DFloatArray(voxels);
 
-            UnityEngine.Debug.LogFormat(" Width: {0}, Height: {1}, Length: {2}, Width*Height*Length: {3}", width, height, length, (width * height * length));
-
             List<Vector3> verts = new List<Vector3>();
             List<int> indices = new List<int>();
             marching.Generate(flatVoxels, width, height, length, verts, indices);
 
-            meshFilter.mesh.Clear();
-            meshFilter.mesh.vertices = verts.ToArray();
-            meshFilter.mesh.triangles = indices.ToArray();
-
-            UnityEngine.Debug.LogFormat(" verts: {0}", verts.Count);
+            vertices = verts.ToArray();
+            triangles = indices.ToArray();
         }
 
-        static float[] Convert3DIntArrayTo1DFloatArray(int[,,] array)
+        private float[] Convert3DIntArrayTo1DFloatArray(int[,,] array)
         {
-            int width = array.GetLength(0);// was 32 by default
-            int height = array.GetLength(1);// was 32 by default
-            int length = array.GetLength(2);// was 32 by default
-
-            List<float> result = new List<float>();
-            for(int i = 0; i < width; i++)
+            int width = array.GetLength(0);
+            int height = array.GetLength(1);
+            int length = array.GetLength(2);
+            float[] result = new float[width * height * length];
+            for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
                     for (int k = 0; k < length; k++)
                     {
-                        result.Add(array[i,j,k]);
+                        int pos = i + j * width + k * width * height;
+                        result[pos] = array[i, j, k];
                     }
                 }
             }
 
-            return result.ToArray();
+            return result;
         }
-
-        private void DoubleMesh()
-        {
-            Vector3[] vertices = meshFilter.mesh.vertices;
-            Vector3[] normals  = meshFilter.mesh.normals;
-            int verticesLength = vertices.Length;
-            Vector3[] newVerts = new Vector3[verticesLength * 2];
-            Vector3[] newNorms = new Vector3[verticesLength * 2];
-            int Count1 = 0;
-            for (Count1 = 0; Count1 < verticesLength; Count1++)
-            {
-                // duplicate vertices and uvs:
-                newVerts[Count1] = newVerts[Count1 + verticesLength] = vertices[Count1];//verts[Count1];
-                                                                                        // copy the original normals...
-                newNorms[Count1] = normals[Count1];
-                // and revert the new ones
-                newNorms[Count1 + verticesLength] = -normals[Count1];
-            }
-            int[] triangles = meshFilter.mesh.triangles;
-            int trianglesLength = triangles.Length;
-            int[] newTris = new int[trianglesLength * 2]; // double the triangles
-            for (int Count2 = 0; Count2 < trianglesLength; Count2 += 3)
-            {
-                // copy the original triangle
-                newTris[Count2] = triangles[Count2];
-                newTris[Count2 + 1] = triangles[Count2 + 1];
-                newTris[Count2 + 2] = triangles[Count2 + 2];
-                // save the new reversed triangle
-                Count1 = Count2 + trianglesLength;
-                newTris[Count1] = triangles[Count2] + verticesLength;
-                newTris[Count1 + 2] = triangles[Count2 + 1] + verticesLength;
-                newTris[Count1 + 1] = triangles[Count2 + 2] + verticesLength;
-            }
-            meshFilter.mesh.Clear();
-            meshFilter.mesh.vertices = newVerts;
-            meshFilter.mesh.normals = newNorms;
-            meshFilter.mesh.triangles = newTris; // assign triangles last!
-            meshFilter.mesh.RecalculateNormals();
-        } 
-
     }
 }

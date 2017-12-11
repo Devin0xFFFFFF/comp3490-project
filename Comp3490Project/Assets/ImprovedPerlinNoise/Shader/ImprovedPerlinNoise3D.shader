@@ -8,21 +8,21 @@ Shader "Noise/ImprovedPerlinNoise3D"
 	{
 	    Pass 
 	    {
-	
 			CGPROGRAM
 
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 3.0
 			#include "UnityCG.cginc"
+			#include "UnityLightingCommon.cginc" // for _LightColor0
 			
 			sampler2D _PermTable2D, _Gradient3D;
 			float _Frequency, _Lacunarity, _Gain;
-			float _NoiseStyle;
 
 			struct v2f 
 			{
 			    float4 pos : SV_POSITION;
+				fixed4 diff : COLOR0; // diffuse lighting color
 			    float4 uv : TEXCOORD;
 			};
 			
@@ -30,6 +30,13 @@ Shader "Noise/ImprovedPerlinNoise3D"
 			{
 			    v2f o;
 			    o.pos = UnityObjectToClipPos(v.vertex);
+				half3 worldNormal = UnityObjectToWorldNormal(v.normal);
+				// dot product between normal and light direction for
+				// standard diffuse (Lambert) lighting
+				half nl = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
+				// factor in the light color
+				o.diff = nl * _LightColor0;
+				o.diff.rgb += ShadeSH9(half4(worldNormal, 1));
 			    o.uv = v.vertex;
 			    return o;
 			}
@@ -37,7 +44,6 @@ Shader "Noise/ImprovedPerlinNoise3D"
 			float3 fade(float3 t)
 			{
 				return t * t * t * (t * (t * 6 - 15) + 10); // new curve
-				//return t * t * (3 - 2 * t); // old curve
 			}
 			
 			float4 perm2d(float2 uv)
@@ -58,7 +64,7 @@ Shader "Noise/ImprovedPerlinNoise3D"
 				float3 f = fade(p);                 // COMPUTE FADE CURVES FOR EACH OF X,Y,Z.
 			
 				P = P / 256.0;
-				const float one = 1.0 / 256.0;
+				float3 one = 1.0 / 256.0;
 				
 			    // HASH COORDINATES OF THE 8 CUBE CORNERS
 				float4 AA = perm2d(P.xy) + P.z;
@@ -89,64 +95,9 @@ Shader "Noise/ImprovedPerlinNoise3D"
 				return sum;
 			}
 			
-			// fractal abs sum, range 0.0 - 1.0
-			float turbulence(float3 p, int octaves)
-			{
-				float sum = 0;
-				float freq = _Frequency, amp = 1.0;
-				for(int i = 0; i < octaves; i++) 
-				{
-					sum += abs(inoise(p*freq))*amp;
-					freq *= _Lacunarity;
-					amp *= _Gain;
-				}
-				return sum;
-			}
-			
-			// Ridged multifractal, range 0.0 - 1.0
-			// See "Texturing & Modeling, A Procedural Approach", Chapter 12
-			float ridge(float h, float offset)
-			{
-			    h = abs(h);
-			    h = offset - h;
-			    h = h * h;
-			    return h;
-			}
-			
-			float ridgedmf(float3 p, int octaves, float offset)
-			{
-				float sum = 0;
-				float freq = _Frequency, amp = 0.5;
-				float prev = 1.0;
-				for(int i = 0; i < octaves; i++) 
-				{
-					float n = ridge(inoise(p*freq), offset);
-					sum += n*amp*prev;
-					prev = n;
-					freq *= _Lacunarity;
-					amp *= _Gain;
-				}
-				return sum;
-			}
-			
 			half4 frag (v2f i) : COLOR
 			{
-				float n = 0;
-
-				//I reconmend not to actually use the conditional statment.
-				//Just pick one stlye or have a seperate shader for each. 
-				if (_NoiseStyle == 0)
-				{
-					n = fBm(i.uv.xyz, 4);
-				}
-				else if (_NoiseStyle == 1)
-				{
-					n = turbulence(i.uv.xyz, 4);
-				}
-				else if (_NoiseStyle == 2)
-				{
-					n = ridgedmf(i.uv.xyz, 4, 1.0);
-				}
+				float n = clamp(fBm(i.uv.xyz, 4) + 0.09, 0.09, 1) * i.diff;
 
 			    return half4(n,n,n,1);
 			}
