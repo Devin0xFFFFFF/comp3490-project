@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Comp3490Project
 {
@@ -12,7 +13,10 @@ namespace Comp3490Project
         public float BoundDistance = 30;
         public float MergeFactor = 100;
         public GameObject BoundingSphere;
+        public Text HUDText;
+
         private NBodySim nBodySim;
+        private AudioSource audioSource;
 
         private bool simRunning = true;
         private bool computingBodies = false;
@@ -20,6 +24,7 @@ namespace Comp3490Project
         private void Awake()
         {
             nBodySim = GetComponent<NBodySim>();
+            audioSource = GetComponent<AudioSource>();
         }
 
         private void Start()
@@ -35,6 +40,8 @@ namespace Comp3490Project
             {
                 simRunning = !simRunning;
                 nBodySim.ToggleIsUpdating();
+                BoundingSphere.SetActive(false);
+                HUDText.text = "";
             }
             else if(Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -49,7 +56,9 @@ namespace Comp3490Project
                 }
                 
                 BoundingSphere.transform.position = transform.position;
-                if(simRunning)
+                audioSource.Play();
+
+                if (simRunning)
                 {
                     simRunning = false;
                     nBodySim.ToggleIsUpdating();
@@ -60,6 +69,7 @@ namespace Comp3490Project
             else if(Input.GetKeyDown(KeyCode.Mouse1))
             {
                 BoundingSphere.SetActive(false);
+                HUDText.text = "";
             }
             else if(Input.GetKeyDown(KeyCode.Return))
             {
@@ -73,8 +83,6 @@ namespace Comp3490Project
         private IEnumerator ComputeBodies()
         {
             yield return Ninja.JumpToUnity;
-
-            Debug.Log("Starting Body Bounds-Checking Calculations...");
 
             Vector3 origin = BoundingSphere.transform.position;
             float distThreshold = BoundDistance;
@@ -90,7 +98,7 @@ namespace Comp3490Project
            GameManager.SetBodies(bodies);
             computingBodies = false;
 
-            Debug.LogFormat("Identified {0} unique bodies within the bounding sphere of size {1}", bodies.Length, BoundDistance);
+            HUDText.text = string.Format("Identified {0} unique bodies within the bounding sphere.", bodies.Length);
         }
 
         private Body[] ComputeBoundedPoints(Vector3 origin, float distThreshold, float[] points)

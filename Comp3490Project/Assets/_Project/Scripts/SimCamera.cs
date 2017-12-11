@@ -1,5 +1,6 @@
 ﻿using SuperSystems.UnityTools;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityStandardAssets.Utility;
 
 namespace Comp3490Project
@@ -7,6 +8,7 @@ namespace Comp3490Project
     public class SimCamera : MonoBehaviour
     {
         public MainMenu MainMenu;
+        public Text HUDText;
 
         private NBodySimManager nBodySimManager;
         private FreeCamera freeCamera;
@@ -27,6 +29,9 @@ namespace Comp3490Project
             freeCamera.enabled = true;
             autoRotate.enabled = false;
             smoothFollow.enabled = false;
+
+            HUDText.text = "";
+            HUDText.gameObject.SetActive(true);
         }
 
         public void SwitchToMenuMode()
@@ -35,6 +40,8 @@ namespace Comp3490Project
             freeCamera.enabled = false;
             autoRotate.enabled = true;
             smoothFollow.enabled = true;
+
+            HUDText.gameObject.SetActive(false);
         }
 
         private void Update()
