@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Comp3490Project
@@ -13,6 +13,7 @@ namespace Comp3490Project
         public GameObject InstructionsPanel;
 
         public Button PlayButton;
+        public Button AsteroidDemoButton;
         public Button InstructionsButton;
         public Button BackToMainMenuButton;
         public Button QuitButton;
@@ -27,6 +28,7 @@ namespace Comp3490Project
             audioPlayer = GetComponent<AudioSource>();
 
             PlayButton.onClick.AddListener(Play);
+            AsteroidDemoButton.onClick.AddListener(Demo);
             InstructionsButton.onClick.AddListener(ShowInstructions);
             BackToMainMenuButton.onClick.AddListener(ShowMainMenu);
             QuitButton.onClick.AddListener(Quit);
@@ -47,6 +49,11 @@ namespace Comp3490Project
             SimCam.SwitchToGameMode();
 
             StartCoroutine(HideMenu());
+        }
+
+        private void Demo()
+        {
+            SceneManager.LoadScene(2);
         }
 
         private IEnumerator HideMenu()

@@ -175,8 +175,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Click the randomly generated asteroid to destroy it! (Takes a few seconds
-    to spawn)
+  m_Text: '''Left-Click'' the randomly generated asteroid to deform it! (Takes a few
+    seconds to spawn)
+
+    You can press ''Enter'' to spawn a new random asteroid. ''Space'' toggles asteroid
+    rotation. ''Escape'' for menu.'
 --- !u!222 &184415330
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -214,6 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d202d32e6b1fea49bfa8ab5c17bd91e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AsteroidPrefab: {fileID: 1115314746}
 --- !u!81 &192981388
 AudioListener:
   m_ObjectHideFlags: 0
@@ -402,7 +406,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.10979154}
-  m_AnchoredPosition: {x: -0.012451172, y: -0.37374878}
+  m_AnchoredPosition: {x: -0.012451172, y: -0.3737793}
   m_SizeDelta: {x: -0.030029297, y: -0.689621}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &898803101
@@ -591,9 +595,28 @@ Prefab:
       propertyPath: HitEffect
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1081586067130716, guid: d15157f06e33f8b4389814f7cc71b42a, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114476102928801456, guid: d15157f06e33f8b4389814f7cc71b42a,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114290345368007068, guid: d15157f06e33f8b4389814f7cc71b42a,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d15157f06e33f8b4389814f7cc71b42a, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1115314746 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1081586067130716, guid: d15157f06e33f8b4389814f7cc71b42a,
+    type: 2}
+  m_PrefabInternal: {fileID: 1115314745}
 --- !u!1 &1235473857
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,3 +776,45 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1001 &2037879094
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4357976506172832, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4357976506172832, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4357976506172832, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4357976506172832, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4357976506172832, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4357976506172832, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4357976506172832, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4357976506172832, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
+  m_IsPrefabParent: 0

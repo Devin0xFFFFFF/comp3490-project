@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Project/GameScene.unity
     guid: 0951a57e88aeea840b55e320b3a518e0
+  - enabled: 1
+    path: Assets/Project/AsteroidDemoScene.unity
+    guid: ba58268b2fe4e7e448c54b32cf733882
