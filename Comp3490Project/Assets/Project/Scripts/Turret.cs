@@ -6,8 +6,7 @@ namespace Comp3490Project
     {
         private TurretTracking tracking;
         private TurretFiring firing;
-        private GameObject target;
-        private Vector3 originForwardPosition;
+        private Collider target;
 
         private bool trackingEnabled;
 
@@ -24,7 +23,7 @@ namespace Comp3490Project
             trackingEnabled = enabled;
         }
 
-        public void TrySetTarget(GameObject newTarget)
+        public void TrySetTarget(Collider newTarget)
         {
             if(target == null || Vector3.Distance(transform.position, newTarget.transform.position) < 
                 Vector3.Distance(transform.position, target.transform.position))
@@ -37,7 +36,7 @@ namespace Comp3490Project
         {
             if(trackingEnabled && target != null)
             {
-                tracking.Target = target.transform.position;
+                tracking.Target = target.ClosestPointOnBounds(transform.position);
                 if(tracking.LockedOn() && Vector3.Distance(transform.position, target.transform.position) < firing.FireRange)
                 {
                     firing.Fire();

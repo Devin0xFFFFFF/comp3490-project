@@ -2,8 +2,9 @@
 
 namespace Comp3490Project
 {
-    //https://assetstore.unity.com/packages/tools/free-turret-script-56646
-    //https://assetstore.unity.com/packages/tools/ai/simple-turret-system-92160
+    // Modified combination of the following two examples:
+    // https://assetstore.unity.com/packages/tools/free-turret-script-56646
+    // https://assetstore.unity.com/packages/tools/ai/simple-turret-system-92160
 
     public class TurretTracking : MonoBehaviour
     {

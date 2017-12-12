@@ -111,6 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RunOnStart: 0
   VoxelSize: 16
+  HitEffect: {fileID: 196738, guid: d58b2e279376a814faf2e5a6ff13a127, type: 2}
 --- !u!114 &114476102928801456
 MonoBehaviour:
   m_ObjectHideFlags: 1

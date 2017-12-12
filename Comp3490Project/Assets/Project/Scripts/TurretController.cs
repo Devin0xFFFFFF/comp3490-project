@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Comp3490Project
@@ -9,14 +8,14 @@ namespace Comp3490Project
         public AudioSource TurretEnableAudio;
         public Turret[] Turrets;
 
-        private List<GameObject> hostileObjectsInRange;
+        private List<Collider> hostileObjectsInRange;
         private bool turretsEnabled;
 
         public bool Enabled { get { return turretsEnabled; } }
 
         private void Awake()
         {
-            hostileObjectsInRange = new List<GameObject>();
+            hostileObjectsInRange = new List<Collider>();
             turretsEnabled = false;
         }
 
@@ -62,14 +61,20 @@ namespace Comp3490Project
 
         private void OnTriggerEnter(Collider other)
         {
-            hostileObjectsInRange.Add(other.gameObject);
-            CalculateTargets();
+            if(!other.gameObject.CompareTag("Projectile"))
+            {
+                hostileObjectsInRange.Add(other);
+                CalculateTargets();
+            }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            hostileObjectsInRange.Remove(other.gameObject);
-            CalculateTargets();
+            if (!other.gameObject.CompareTag("Projectile"))
+            {
+                hostileObjectsInRange.Remove(other);
+                CalculateTargets();
+            }
         }
     }
 }

@@ -29,7 +29,6 @@ namespace Comp3490Project
 
         private void Start()
         {
-            MergeFactor = 100;
             BoundingSphere.transform.localScale = Vector3.one * BoundDistance;
             BoundingSphere.SetActive(false);
         }

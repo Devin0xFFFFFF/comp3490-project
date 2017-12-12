@@ -6,13 +6,9 @@ namespace Comp3490Project
     {
         public float FireRate = 0.1f;
         public float FireRange = 50.0f;
-        //public int MaxAmmo = 1;
-        //public float ReloadTime = 0;
-        //public float AmmoRegenRate = 0;
         public GameObject ShotPrefab;
         public AudioClip ShotSound;
         public ParticleSystem MuzzleParticles;
-        //public ParticleSystem ImpactParticles;
         public GameObject[] MuzzlePoints;
 
         private AudioSource audioSource;

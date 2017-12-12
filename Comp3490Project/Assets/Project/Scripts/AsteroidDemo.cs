@@ -29,7 +29,7 @@ namespace Comp3490Project
 
                 if (deformer != null)
                 {
-                    deformer.Hit(hit);
+                    deformer.Hit(hit.point);
                 }
             }
         }

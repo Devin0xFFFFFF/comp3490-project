@@ -7,6 +7,7 @@ namespace Comp3490Project
 {
     public class BodyGenerator: MonoBehaviour
     {
+        public int Segments = 1;
         public int MaxBodies = 5000;
         public float Dispersion = 500;
         public GameObject Prefab;
@@ -25,11 +26,11 @@ namespace Comp3490Project
             Body[] bodies = GameManager.GetBodies();
             if (bodies != null)
             {
-                GenerateBodies(bodies);
+                GenerateBodies(bodies, Segments);
             }
         }
 
-        private void GenerateBodies(Body[] bodies, int segments = 4)
+        private void GenerateBodies(Body[] bodies, int segments = 1)
         {
             if(bodies.Length == 0)
             {

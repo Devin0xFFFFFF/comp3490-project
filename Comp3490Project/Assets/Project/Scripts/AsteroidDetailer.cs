@@ -1,6 +1,4 @@
 ﻿using ImprovedPerlinNoiseProject;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Comp3490Project

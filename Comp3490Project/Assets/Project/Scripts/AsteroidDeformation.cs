@@ -12,12 +12,12 @@ namespace Comp3490Project
     {
         public bool RunOnStart = false;
         public int VoxelSize = 16;
+        public GameObject HitEffect;
         
         private MeshFilter meshFilter;
         private MeshRenderer meshRenderer;
         private MeshCollider meshCollider;
 
-        private bool initialized = false;
         private int[,,] voxels;
 
         private void Awake()
@@ -35,12 +35,12 @@ namespace Comp3490Project
             }
         }
 
-        public void Hit(RaycastHit hit)
+        public void Hit(Vector3 hit)
         {
-            Vector3 hitPoint = transform.InverseTransformPoint(hit.point); // world to object coords
+            Vector3 hitPoint = transform.InverseTransformPoint(hit); // world to object coords
 
-            int x = Mathf.RoundToInt(hitPoint.x); // object to voxel coords 
-            int y = Mathf.RoundToInt(hitPoint.y);
+            int x = Mathf.RoundToInt(hitPoint.x); // round to nearest voxel
+            int y = Mathf.RoundToInt(hitPoint.y); 
             int z = Mathf.RoundToInt(hitPoint.z);
 
             voxels[x, y, z] = 0; // remove the voxel
@@ -50,6 +50,12 @@ namespace Comp3490Project
 
             MarchMesh(voxels, out vertices, out triangles);
             UpdateMesh(vertices, triangles);
+
+            if(HitEffect != null)
+            {
+                GameObject hitEffect = Instantiate(HitEffect, hit, Quaternion.identity);
+                hitEffect.SetActive(true);
+            }
         }
 
         public IEnumerator Deform()
@@ -102,44 +108,27 @@ namespace Comp3490Project
         {
             Vector3[] vertices = inputVertices;
             System.Random random = new System.Random();
-
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                Vector3 vec3 = vertices[i];
-                float x = vec3.x;
-                float y = vec3.y;
-                float z = vec3.z;
-                int test = 140;
-
-                vec3.x += ((y * 5) * (random.Next(100, test) / 100));
-                vec3.y -= ((x * 7) * (random.Next(100, test) / 100));
-                vec3.z -= ((y * 4.5f) * (random.Next(100, test) / 100));
-
-                vertices[i] = vec3.normalized;
-            }
-
             int seed = random.Next(0, int.MaxValue);
             INoise perlin = new PerlinNoise(seed, 2.0f);
             FractalNoise fractal = new FractalNoise(perlin, 3, 1.0f);
 
-
             for (int i = 0; i < vertices.Length; i++)
             {
                 Vector3 vec3 = vertices[i];
+
+                float x = vec3.x + (vec3.x * 5 * random.Next(100, 140) / 100);
+                float y = vec3.y - (vec3.x * 7 * random.Next(100, 140) / 100);
+                float z = vec3.z - (vec3.y * 4.5f * random.Next(100, 140) / 100);
+
+                vec3 = new Vector3(x, y, z).normalized;
+
                 float scale = 50f;
-                if (random.Next(1, 2) == 1)
-                {
-                    vec3.x += fractal.Sample1D(vec3.x) * scale;
-                    vec3.y += fractal.Sample1D(vec3.y) * scale;
-                    vec3.z += fractal.Sample1D(vec3.z) * scale;
-                }
-                else
-                {
-                    vec3.x -= fractal.Sample1D(vec3.x) * scale;
-                    vec3.y -= fractal.Sample1D(vec3.y) * scale;
-                    vec3.z -= fractal.Sample1D(vec3.z) * scale;
-                }
-                vertices[i] = vec3.normalized;
+                int sign = random.Next(1, 2) == 1 ? 1 : -1;
+                x = vec3.x + sign * (fractal.Sample1D(vec3.x) * scale);
+                y = vec3.y + sign * (fractal.Sample1D(vec3.y) * scale);
+                z = vec3.z + sign * (fractal.Sample1D(vec3.z) * scale);
+
+                vertices[i] = new Vector3(x, y, z).normalized;
             }
 
             return vertices;

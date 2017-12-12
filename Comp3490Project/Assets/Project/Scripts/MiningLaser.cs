@@ -1,5 +1,4 @@
-﻿using MeshVoxelizerProject;
-using UnityEngine;
+﻿using UnityEngine;
 using VolumetricLines;
 
 namespace Comp3490Project
@@ -11,6 +10,7 @@ namespace Comp3490Project
         public AudioSource PulseSound;
         public AudioSource OverheatSound;
         public AudioSource NotReadySound;
+        public AudioSource HitSound;
 
         public float FireRange = 100.0f;
         public float MaxFiringDuration = 5;
@@ -18,16 +18,18 @@ namespace Comp3490Project
 
         private bool firing;
         private bool coolingDown;
-        private float accumulatedTime;
+        private float accumulatedHeat;
+        private float shootAccumulatedTime;
         private Light laserLight;
 
-        public float Heat { get { return accumulatedTime; } }
+        public float Heat { get { return accumulatedHeat; } }
 
         private void Awake()
         {
             firing = false;
             coolingDown = false;
-            accumulatedTime = 0;
+            accumulatedHeat = 0;
+            shootAccumulatedTime = 0;
 
             laserLight = Laser.GetComponent<Light>();
         }
@@ -58,8 +60,8 @@ namespace Comp3490Project
         {
             if(firing)
             {
-                accumulatedTime += Time.deltaTime;
-                if(accumulatedTime > MaxFiringDuration)
+                accumulatedHeat += Time.deltaTime;
+                if(accumulatedHeat > MaxFiringDuration)
                 {
                     coolingDown = true;
                     firing = false;
@@ -70,19 +72,20 @@ namespace Comp3490Project
             }
             else
             {
-                accumulatedTime -= Time.deltaTime;
-                if(accumulatedTime <= 0)
+                accumulatedHeat -= Time.deltaTime * CooldownDuration;
+                if(accumulatedHeat <= 0)
                 {
                     coolingDown = false;
                 }
             }
 
-            accumulatedTime = Mathf.Clamp(accumulatedTime, 0, MaxFiringDuration);
+            accumulatedHeat = Mathf.Clamp(accumulatedHeat, 0, MaxFiringDuration);
             
-            if(accumulatedTime > 0)
+            if(accumulatedHeat > 0)
             {
                 if(!Laser.gameObject.activeInHierarchy)
                 {
+                    shootAccumulatedTime = int.MaxValue;
                     Laser.gameObject.SetActive(true);
                 }
                 if(!firing)
@@ -92,28 +95,40 @@ namespace Comp3490Project
                 }
                 else
                 {
-                    Laser.LineWidth = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;
-                    laserLight.range = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;
+                    Laser.LineWidth = Mathf.Lerp(0, 100, accumulatedHeat) + Mathf.PingPong(Time.time, 0.75f) * 200;
+                    laserLight.range = Mathf.Lerp(0, 100, accumulatedHeat) + Mathf.PingPong(Time.time, 0.75f) * 200;
+                    Laser.EndPos = new Vector3(0, 0, Mathf.Lerp(0, 10000, accumulatedHeat * 4));
 
                     Shoot();
                 }
             }
             else if(Laser.gameObject.activeInHierarchy)
             {
+                shootAccumulatedTime = 0;
                 Laser.gameObject.SetActive(false);
             }
         }
 
         private void Shoot()
         {
+            shootAccumulatedTime += Time.deltaTime;
+
             RaycastHit hit;
             if (Physics.Raycast(Laser.transform.position, Laser.transform.TransformDirection(Vector3.forward), out hit, Laser.EndPos.z))
             {
                 AsteroidDeformation deformer = hit.transform.GetComponent<AsteroidDeformation>();
 
-                if(deformer != null)
+                if (deformer != null)
                 {
-                    deformer.Hit(hit);
+                    deformer.Hit(hit.point);
+
+                    if(shootAccumulatedTime > HitSound.clip.length + 0.001f)
+                    {
+                        HitSound.Stop();
+                        HitSound.pitch = Random.Range(-1.0f, 1.5f);
+                        HitSound.Play();
+                        shootAccumulatedTime = 0;
+                    }
                 }
             }
         }

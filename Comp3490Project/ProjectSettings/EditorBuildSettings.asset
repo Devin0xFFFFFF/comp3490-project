@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Project/NBodySim.unity
+    path: Assets/Project/SimScene.unity
     guid: 404552aee88f2fa4fa8283d499d102da
   - enabled: 1
-    path: Assets/_Project/DemoScene.unity
+    path: Assets/Project/GameScene.unity
     guid: 0951a57e88aeea840b55e320b3a518e0

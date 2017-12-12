@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
 /**
- * ShipController.cs - A Unity3D player controller inspired by Elite: Dangerous.
- * 
+ * Modified from: https://github.com/M4deM4n/ShipController
+ * A Unity3D player controller inspired by Elite: Dangerous
  * Original Author: Jeff Pizano
  **/
 namespace Comp3490Project
@@ -79,11 +79,7 @@ namespace Comp3490Project
             isCurrentlyFrontCamera = false;
         }
 
-
-        /// <summary>
-        /// Initialize ship controller and capture screen information.
-        /// </summary>
-        void Start()
+        private void Start()
         {
             centerScreen = new Vector3(Screen.width / 2, Screen.height / 2, 0);
             ship = GetComponent<Rigidbody>();
@@ -91,11 +87,7 @@ namespace Comp3490Project
             qtrScreenW = Screen.width * 0.25f;
         }
 
-
-        /// <summary>
-        /// Called by the UnityEngine, should update once per frame.
-        /// </summary>
-        void Update()
+        private void Update()
         {
             InputUpdate();
 
@@ -117,18 +109,12 @@ namespace Comp3490Project
             currentCamera.SetRadarMode(radarOn);
         }
 
-        /// <summary>
-        /// Fixed step update used for physics calculations.
-        /// </summary>
         private void FixedUpdate()
         {
             InputFixedUpdate();
         }
 
-        /// <summary>
-        /// This method handles input that doesn't deal with the physics engine.
-        /// </summary>
-        void InputUpdate()
+        private void InputUpdate()
         {
             if(Input.GetKeyDown(KeyCode.Alpha1))// || Input.GetKeyUp(KeyCode.Alpha1))
             {
@@ -202,11 +188,7 @@ namespace Comp3490Project
             throttle = Mathf.Clamp(throttle, minThrottle, maxThrottle);
         }
 
-
-        /// <summary>
-        /// This method handles the physics related to input.
-        /// </summary>
-        void InputFixedUpdate()
+        private void InputFixedUpdate()
         {
             // ADJUST PITCH (FORWARD/BACK/TILT/LOCAL X)
             if (adjustPitch)
@@ -243,8 +225,7 @@ namespace Comp3490Project
             }
         }
 
-        // Returns a pitch value based on the relative distance of the mouse from the center of the screen.
-        float GetPitchValue()
+        private float GetPitchValue()
         {
             pitchDiff = -(centerScreen.y - mousePosition.y);
             pitchDiff = Mathf.Clamp(pitchDiff, -qtrScreenH, qtrScreenH);
@@ -257,9 +238,7 @@ namespace Comp3490Project
             return (pitchDiff / qtrScreenH);
         }
 
-
-        // Returns a yaw value based on the relative position of the mouse from the center of the screen.
-        float GetYawValue()
+        private float GetYawValue()
         {
             yawDiff = -(centerScreen.x - mousePosition.x);
             yawDiff = Mathf.Clamp(yawDiff, -qtrScreenW, qtrScreenW);
@@ -272,9 +251,7 @@ namespace Comp3490Project
             return (yawDiff / qtrScreenW);
         }
 
-
-        // Returns a digital axis.
-        float GetRollValue()
+        private float GetRollValue()
         {
             if (Input.GetKey(KeyCode.Q))
                 return 1.0f;
@@ -285,12 +262,7 @@ namespace Comp3490Project
             return 0;
         }
 
-
-        /// <summary>
-        /// Returns a digital axis.
-        /// </summary>
-        /// <returns></returns>
-        float GetThrustY()
+        private float GetThrustY()
         {
             if (Input.GetKey(KeyCode.Space))
                 return 1;
@@ -301,11 +273,7 @@ namespace Comp3490Project
             return 0.0f;
         }
 
-
-        /// <summary>
-        /// Dampens the velocity and angular velocity of the rigid body over time.
-        /// </summary>
-        void DampenTransform()
+        private void DampenTransform()
         {
             Vector3 nVeloc = new Vector3(
                 Mathf.Lerp(ship.velocity.x, 0, Time.deltaTime * 0.75f),
