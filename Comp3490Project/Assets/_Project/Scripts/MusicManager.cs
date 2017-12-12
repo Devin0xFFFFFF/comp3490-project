@@ -8,6 +8,21 @@ namespace Comp3490Project
         public AudioSource AudioPlayer;
         public AudioClip[] Clips;
 
+        private static bool initialized = false;
+
+        private void Awake()
+        {
+            if(!initialized)
+            {
+                DontDestroyOnLoad(gameObject);
+                initialized = true;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
         private void Start()
         {
             if (Clips.Length > 0)

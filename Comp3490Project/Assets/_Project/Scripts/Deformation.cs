@@ -64,9 +64,9 @@ namespace Comp3490Project
             meshFilter.mesh.triangles = triangles;
             meshFilter.mesh.RecalculateNormals();
 
-            DestroyImmediate(this.GetComponent<MeshCollider>());
-           // var collider = this.AddComponent<MeshCollider>();
-           // collider.sharedMesh = meshFilter.mesh;
+            //DestroyImmediate(this.GetComponent<MeshCollider>());
+            //var collider = this.AddComponent<MeshCollider>();
+            //collider.sharedMesh = meshFilter.mesh;
 
 
             meshRenderer.enabled = true;

@@ -33,7 +33,6 @@ namespace Comp3490Project
             meshRenderer.enabled = false;
 
             Vector3[] vertices = meshFilter.mesh.vertices;
-
             meshFilter.mesh.vertices = vertices;
             meshFilter.mesh.RecalculateBounds();
 
@@ -64,18 +63,7 @@ namespace Comp3490Project
         {
             Vector3[] vertices;
             int[] triangles;
-
-
             MarchMesh(voxels, out vertices, out triangles);
-            
-            for(int i = 0; i < meshFilter.mesh.vertexCount; i++)
-            {
-                if(meshFilter.mesh.vertices[i] != vertices[i])
-                {
-                    Debug.LogFormat("meshFilter.mesh.vertices:{0}, changed to: {vertices}", meshFilter.mesh.vertices[i], vertices[i]);
-                }
-            }
-
             meshFilter.mesh.Clear();
             meshFilter.mesh.vertices = vertices;
             meshFilter.mesh.triangles = triangles;
@@ -133,14 +121,7 @@ namespace Comp3490Project
 
             List<Vector3> verts = new List<Vector3>();
             List<int> indices = new List<int>();
-
-            Debug.LogFormat("verts before marching:{0}", (width*height*length));
-
             marching.Generate(flatVoxels, width, height, length, verts, indices);
-            Debug.LogFormat("verts after marching:{0}", verts.Count);
-            float scalar = (float)(width * height * length)/verts.Count;
-            Debug.LogFormat("scalar:{0}", scalar);
-
             vertices = verts.ToArray();
             triangles = indices.ToArray();
         }

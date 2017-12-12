@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Comp3490Project
 {
@@ -25,7 +26,10 @@ namespace Comp3490Project
 
         private void Update()
         {
-
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene(0);
+            }
         }
     }
 }

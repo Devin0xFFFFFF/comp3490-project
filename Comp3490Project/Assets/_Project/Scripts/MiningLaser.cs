@@ -21,6 +21,14 @@ namespace Comp3490Project
         private float accumulatedTime;
         private Light laserLight;
 
+        [Range(0,16)]
+        public int xoffset = 0;
+        [Range(0, 16)]
+        public int yoffset = 0;
+        [Range(0, 16)]
+        public int zoffset = 0;
+
+
         public float Heat { get { return accumulatedTime; } }
 
         private void Awake()
@@ -93,35 +101,12 @@ namespace Comp3490Project
                 else
                 {
                     Laser.LineWidth = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;
-                    laserLight.range = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;
-
-                    IsTargetVisible();
+                    laserLight.range = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;  
                 }
             }
             else if(Laser.gameObject.activeInHierarchy)
             {
                 Laser.gameObject.SetActive(false);
-            }
-        }
-        private void IsTargetVisible()
-        {
-            //SphereVoxelizerTest.pos - Laser.StartPos
-            RaycastHit h;
-            if(Physics.Raycast(Laser.transform.position, Laser.transform.TransformDirection(Vector3.forward), out h, laserLight.range))
-            {
-                Vector3 fwd = transform.TransformDirection(Vector3.forward);
-                int[,,] voxels = SphereVoxelizerTest.voxels;
-                Vector3 hit = SphereVoxelizerTest.sphere.transform.TransformPoint(h.point);// world to local co-ordinites
-
-                float size = 0.770306f;
-                //Box3 bounds = new Box3(SphereVoxelizerTest.meshFilter.mesh.bounds.min, SphereVoxelizerTest.meshFilter.mesh.bounds.max);
-                Vector3 scale = new Vector3(h.point.x * size, h.point.y * size, h.point.z * size);
-
-                Debug.LogFormat("World:{0}, Object:{1}", h.point, scale);
-
-                SphereVoxelizerTest.voxels[(int)(scale.x), (int)(scale.y), (int)(scale.z)] = 0;// out of bounds 
-                SphereVoxelizerTest.changes();
-
             }
         }
     }
