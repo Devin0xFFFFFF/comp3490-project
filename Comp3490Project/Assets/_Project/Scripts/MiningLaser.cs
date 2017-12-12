@@ -21,14 +21,6 @@ namespace Comp3490Project
         private float accumulatedTime;
         private Light laserLight;
 
-        [Range(0,16)]
-        public int xoffset = 0;
-        [Range(0, 16)]
-        public int yoffset = 0;
-        [Range(0, 16)]
-        public int zoffset = 0;
-
-
         public float Heat { get { return accumulatedTime; } }
 
         private void Awake()
@@ -101,12 +93,28 @@ namespace Comp3490Project
                 else
                 {
                     Laser.LineWidth = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;
-                    laserLight.range = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;  
+                    laserLight.range = Mathf.Lerp(0, 100, accumulatedTime) + Mathf.PingPong(Time.time, 0.75f) * 200;
+
+                    Shoot();
                 }
             }
             else if(Laser.gameObject.activeInHierarchy)
             {
                 Laser.gameObject.SetActive(false);
+            }
+        }
+
+        private void Shoot()
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(Laser.transform.position, Laser.transform.TransformDirection(Vector3.forward), out hit, Laser.EndPos.z))
+            {
+                AsteroidDeformation deformer = hit.transform.GetComponent<AsteroidDeformation>();
+
+                if(deformer != null)
+                {
+                    deformer.Hit(hit);
+                }
             }
         }
     }

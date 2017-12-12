@@ -51,7 +51,7 @@ namespace Comp3490Project
 
         private IEnumerator HideMenu()
         {
-            yield return new WaitForSeconds(SelectSound.length);
+            yield return new WaitForSeconds(SelectSound.length - 0.25f);
             gameObject.SetActive(false);
         }
 

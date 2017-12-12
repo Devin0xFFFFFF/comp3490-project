@@ -8,18 +8,23 @@ using CielaSpike;
 
 namespace Comp3490Project
 {
-    public class Deformation : MonoBehaviour
+    public class AsteroidDeformation : MonoBehaviour
     {
         public bool RunOnStart = false;
         public int VoxelSize = 16;
         
         private MeshFilter meshFilter;
         private MeshRenderer meshRenderer;
+        private MeshCollider meshCollider;
+
+        private bool initialized = false;
+        private int[,,] voxels;
 
         private void Awake()
         {
             meshFilter = GetComponent<MeshFilter>();
             meshRenderer = GetComponent<MeshRenderer>();
+            meshCollider = GetComponent<MeshCollider>();
         }
 
         private void Start()
@@ -30,11 +35,29 @@ namespace Comp3490Project
             }
         }
 
+        public void Hit(RaycastHit hit)
+        {
+            Vector3 hitPoint = transform.InverseTransformPoint(hit.point); // world to object coords
+
+            int x = Mathf.RoundToInt(hitPoint.x); // object to voxel coords 
+            int y = Mathf.RoundToInt(hitPoint.y);
+            int z = Mathf.RoundToInt(hitPoint.z);
+
+            voxels[x, y, z] = 0; // remove the voxel
+
+            Vector3[] vertices;
+            int[] triangles;
+
+            MarchMesh(voxels, out vertices, out triangles);
+            UpdateMesh(vertices, triangles);
+        }
+
         public IEnumerator Deform()
         {
             yield return Ninja.JumpToUnity;
 
             meshRenderer.enabled = false;
+            meshCollider.enabled = false;
 
             Vector3[] vertices = meshFilter.mesh.vertices;
 
@@ -52,24 +75,27 @@ namespace Comp3490Project
 
             yield return Ninja.JumpBack;
 
-            int[,,] voxels = VoxelizeMesh(vertices, triangles, bounds, VoxelSize);
+            voxels = VoxelizeMesh(vertices, triangles, bounds, VoxelSize);
             voxels = Pad3DArray(voxels);
 
             MarchMesh(voxels, out vertices, out triangles);
 
             yield return Ninja.JumpToUnity;
 
+            UpdateMesh(vertices, triangles);
+
+            meshRenderer.enabled = true;
+            meshCollider.enabled = true;
+        }
+
+        private void UpdateMesh(Vector3[] vertices, int[] triangles)
+        {
             meshFilter.mesh.Clear();
             meshFilter.mesh.vertices = vertices;
             meshFilter.mesh.triangles = triangles;
             meshFilter.mesh.RecalculateNormals();
 
-            //DestroyImmediate(this.GetComponent<MeshCollider>());
-            //var collider = this.AddComponent<MeshCollider>();
-            //collider.sharedMesh = meshFilter.mesh;
-
-
-            meshRenderer.enabled = true;
+            meshCollider.sharedMesh = meshFilter.mesh;
         }
 
         private Vector3[] WarpVertices(Vector3[] inputVertices)

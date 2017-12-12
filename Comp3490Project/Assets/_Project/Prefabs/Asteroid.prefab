@@ -20,11 +20,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4622084195218576}
   - component: {fileID: 33957604110757576}
-  - component: {fileID: 135791521707223004}
   - component: {fileID: 23384453906973824}
+  - component: {fileID: 64127915425032674}
   - component: {fileID: 114290345368007068}
-  - component: {fileID: 114994822786660652}
   - component: {fileID: 114476102928801456}
+  - component: {fileID: 114994822786660652}
   m_Layer: 0
   m_Name: Asteroid
   m_TagString: Untagged
@@ -84,6 +84,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1081586067130716}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!64 &64127915425032674
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1081586067130716}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 0
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &114290345368007068
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -126,17 +140,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4124c59241137374c9cae45d25683042, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: {x: 10, y: 10, z: 10}
+  speed: {x: 0, y: 0, z: 0}
   space: 1
---- !u!135 &135791521707223004
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1081586067130716}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}

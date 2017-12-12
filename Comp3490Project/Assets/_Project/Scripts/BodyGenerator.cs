@@ -31,6 +31,11 @@ namespace Comp3490Project
 
         private void GenerateBodies(Body[] bodies, int segments = 4)
         {
+            if(bodies.Length == 0)
+            {
+                return;
+            }
+
             int length = Mathf.Max(bodies.Length, MaxBodies);
             int segmentLength = (length / segments);
             int remainder = length % segments;
@@ -56,7 +61,7 @@ namespace Comp3490Project
             {
                 Vector3 bodyPos = bodies[i].GetPosition() * Dispersion;
                 GameObject obj = Instantiate(Prefab, bodyPos, Random.rotation);
-                Deformation deform = obj.GetComponent<Deformation>();
+                AsteroidDeformation deform = obj.GetComponent<AsteroidDeformation>();
                 
                 Task task;
                 yield return this.StartCoroutineAsync(deform.Deform(), out task);
