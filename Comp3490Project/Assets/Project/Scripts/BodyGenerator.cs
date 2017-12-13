@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Comp3490Project
 {
+    // Uses Multithreaded Coroutines from: https://www.assetstore.unity3d.com/en/#!/content/15717
     public class BodyGenerator: MonoBehaviour
     {
         public int Segments = 1;

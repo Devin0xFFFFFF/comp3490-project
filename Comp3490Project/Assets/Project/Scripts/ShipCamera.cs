@@ -2,7 +2,7 @@
 
 namespace Comp3490Project
 {
-    // Based off of : https://github.com/densylkin/RTS_Camera
+    // Camera Controls based off of : https://github.com/densylkin/RTS_Camera
     public class ShipCamera : MonoBehaviour
     {
         public KeyCode mouseRotationKey = KeyCode.Mouse1;
@@ -52,6 +52,7 @@ namespace Comp3490Project
         {
             if(radarMode)
             {
+                //Easing modified from https://github.com/lordofduct/spacepuppy-unity-framework/blob/master/SpacepuppyBase/Tween/Easing.cs
                 float t = Time.deltaTime * 25;
                 float b = scanDistance;
                 float c = MaxScanDistance;
@@ -99,6 +100,8 @@ namespace Comp3490Project
             transform.Rotate(Vector3.up, -MouseAxis.x * Time.deltaTime * mouseRotationSpeed, Space.Self);
             transform.Rotate(Vector3.right, -MouseAxis.y * Time.deltaTime * mouseRotationSpeed, Space.Self);
         }
+
+        //Everything below modified from https://github.com/Broxxar/NoMansScanner/
 
         [ImageEffectOpaque]
         void OnRenderImage(RenderTexture src, RenderTexture dst)

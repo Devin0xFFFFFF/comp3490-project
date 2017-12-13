@@ -3,6 +3,7 @@ using VolumetricLines;
 
 namespace Comp3490Project
 {
+    // Uses Volumetric Lines from: https://assetstore.unity.com/packages/tools/particles-effects/volumetric-lines-29160
     public class MiningLaser : MonoBehaviour
     {
         public VolumetricLineBehavior Laser;

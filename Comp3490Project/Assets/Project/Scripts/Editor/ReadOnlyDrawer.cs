@@ -3,6 +3,7 @@ using UnityEditor;
 
 namespace Comp3490Project
 {
+    // Obtained from: https://github.com/M4deM4n/ShipController
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyAttribDrawer : PropertyDrawer
     {

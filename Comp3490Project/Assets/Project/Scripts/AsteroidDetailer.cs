@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Comp3490Project
 {
+    // Uses Perlin Noise Shader from: https://github.com/Scrawk/GPU-GEMS-Improved-Perlin-Noise
     public class AsteroidDetailer : MonoBehaviour
     {
         public bool RunOnStart = false;

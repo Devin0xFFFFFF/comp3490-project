@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Comp3490Project
 {
+    // Uses AutoRotate from: https://github.com/Chaser324/unity-wireframe
     public class AsteroidDemo : MonoBehaviour
     {
         public GameObject AsteroidPrefab;

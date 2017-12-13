@@ -8,6 +8,10 @@ using CielaSpike;
 
 namespace Comp3490Project
 {
+    // Uses Multithreaded Coroutines from: https://www.assetstore.unity3d.com/en/#!/content/15717
+    // Uses Mesh Voxelizer from: https://github.com/Scrawk/Mesh-Voxelization
+    // Uses Marching Cubes Algorithm from: https://github.com/Scrawk/Marching-Cubes
+    // Uses Perlin Noise from: https://github.com/Scrawk/GPU-GEMS-Improved-Perlin-Noise
     public class AsteroidDeformation : MonoBehaviour
     {
         public bool RunOnStart = false;

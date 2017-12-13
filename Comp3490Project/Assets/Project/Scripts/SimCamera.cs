@@ -5,6 +5,9 @@ using UnityStandardAssets.Utility;
 
 namespace Comp3490Project
 {
+    // Uses FreeCamera from: https://github.com/ttammear/unitymcubes
+    // Uses AutoRotate from: https://github.com/Chaser324/unity-wireframe
+    // Uses SmoothFollow from: https://www.assetstore.unity3d.com/en/#!/content/32351
     public class SimCamera : MonoBehaviour
     {
         public MainMenu MainMenu;

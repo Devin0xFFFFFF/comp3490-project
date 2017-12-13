@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace Comp3490Project
 {
+    // Uses NBodySim from: https://github.com/Scrawk/GPU-GEMS-NBody-Simulation
     public class NBodySimManager : MonoBehaviour
     {
         public float BoundDistance = 30;
