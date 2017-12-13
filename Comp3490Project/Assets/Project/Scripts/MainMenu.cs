@@ -11,11 +11,16 @@ namespace Comp3490Project
 
         public GameObject MainMenuPanel;
         public GameObject InstructionsPanel;
+        public GameObject SettingsPanel;
+
+        public SettingsManager Settings;
 
         public Button PlayButton;
         public Button AsteroidDemoButton;
         public Button InstructionsButton;
-        public Button BackToMainMenuButton;
+        public Button SettingsButton;
+        public Button InstructionsBackToMainMenuButton;
+        public Button SettingsBackToMainMenuButton;
         public Button QuitButton;
 
         public AudioClip HoverSound;
@@ -30,11 +35,19 @@ namespace Comp3490Project
             PlayButton.onClick.AddListener(Play);
             AsteroidDemoButton.onClick.AddListener(Demo);
             InstructionsButton.onClick.AddListener(ShowInstructions);
-            BackToMainMenuButton.onClick.AddListener(ShowMainMenu);
+            SettingsButton.onClick.AddListener(ShowSettings);
+            InstructionsBackToMainMenuButton.onClick.AddListener(ShowMainMenu);
+            SettingsBackToMainMenuButton.onClick.AddListener(ShowMainMenu);
             QuitButton.onClick.AddListener(Quit);
 
             MainMenuPanel.SetActive(true);
             InstructionsPanel.SetActive(false);
+            SettingsPanel.SetActive(false);
+        }
+
+        private void Start()
+        {
+            Settings.ApplySettings();
         }
 
         public void PlayHoverButtonSound()
@@ -76,6 +89,13 @@ namespace Comp3490Project
 
             MainMenuPanel.SetActive(true);
             InstructionsPanel.SetActive(false);
+            SettingsPanel.SetActive(false);
+        }
+
+        private void ShowSettings()
+        {
+            MainMenuPanel.SetActive(false);
+            SettingsPanel.SetActive(true);
         }
 
         private void Quit()

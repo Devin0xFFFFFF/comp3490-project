@@ -24,6 +24,10 @@ namespace Comp3490Project
         private void Awake()
         {
             Body[] bodies = GameManager.GetBodies();
+
+            MaxBodies = Config.GlobalConfig.MaxAsteroids;
+            Segments = Config.GlobalConfig.AsteroidGeneratorThreadCount;
+
             if (bodies != null)
             {
                 GenerateBodies(bodies, Segments);

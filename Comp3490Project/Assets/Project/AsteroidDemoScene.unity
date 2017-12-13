@@ -179,7 +179,7 @@ MonoBehaviour:
     seconds to spawn)
 
     You can press ''Enter'' to spawn a new random asteroid. ''Space'' toggles asteroid
-    rotation. ''Escape'' for menu.'
+    rotation.'
 --- !u!222 &184415330
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -815,6 +815,12 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 82445293431694784, guid: 7d394303e6d12054ea45c125db5c1b53,
+        type: 2}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 243476732891248194, guid: 1d3ab68673beeb246bf6e42d3e878545,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7d394303e6d12054ea45c125db5c1b53, type: 2}
   m_IsPrefabParent: 0
