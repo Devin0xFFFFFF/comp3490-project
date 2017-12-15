@@ -5425,32 +5425,38 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Our project is an asteroid mining simulation. There are two parts of the
-    game: Sim Mode and Game Mode.\r\n\r\nIn Sim Mode you select a region in space
-    for an asteroid field. You can move the camera with 'WASD', freeze/unfreeze time
-    with 'Space', 'Left-Click' to generate a bounding sphere around the camera, and
-    'Right-Click' to remove the bounding sphere. The sphere encapsulates a set of
-    simulated particles which will be used to generate a unique asteroid field. Press
-    'Enter' when you have selected your preferred space to move to Game Mode.\r\n\r\nIn
-    Game Mode you control a ship and fly through an asteroid field modeled after your
-    selection in Sim Mode. The asteroids are generated from voxels, meaning they are
-    fully destructible with the use of the ship's mining laser. They will be spawned
-    in over time, as the calculations to generate them are fairly intensive. You can
-    watch the field generate around you, or set out towards already spawned asteroids.
-    The ship uses Unity physics and is controlled by applying forces. It can be controlled
+  m_Text: "There are two parts of the project: Sim/Game Mode, and Demo Mode.\r\n\r\nIn
+    Sim/Game Mode you first select a region in space for an asteroid field. You will
+    need to capture a volume of points in the particle simulation to determine where
+    your asteroids are generated. You can move the camera with 'WASD', freeze/unfreeze
+    time with 'Space', 'Left-Click' to generate a bounding sphere around the camera,
+    and 'Right-Click' to remove the bounding sphere. Press 'Enter' when you have selected
+    your preferred space to move to the playable part. Press \u2018Escape\u2019 to
+    return to the main menu.\r\n\r\nOnce you have chosen your asteroid field, you
+    control a ship and fly through the generating field modeled after your selection.
+    The asteroids are generated from voxels, meaning they are fully destructible with
+    the use of the ship's mining laser. They will be spawned in over time, as the
+    calculations to generate them are fairly intensive. You can watch the field generate
+    around you, or set out towards already spawned asteroids. One asteroid will always
+    be spawned in front of the ship\u2019s starting location for convenience. The
+    ship uses Unity physics and is controlled by applying forces. It can be controlled
     using 'WASD' for directional movement, 'Space' and 'Shift' to move up and down
     respectively, and 'Q' and 'E' to apply roll force. The mouse is used to control
     directional force. The target in the center of the screen is neutral, so pointing
-    the mouse there will not apply any new force. Pressing 'Z' will enable/disable
+    the mouse there will not apply any new force. Moving the mouse anywhere else will
+    apply a force in the corresponding direction. Pressing 'Z' will enable/disable
     flight assist, which if on attempts to neutralize forces. The ship has two camera
     viewpoints, Observer (default) and Front, which can be switched between by pressing
     'V'. On Observer mode the camera can be zoomed in and out by using the 'Mouse-Scrollwheel'.
-    Holding down 'Left-Alt' switches the camera to free-look mode. The ship has several
-    subsystems. Pressing '1' fires the mining laser, which will destroy asteroids
-    that it hits. This has a heat slider displayed in the UI. Pressing '2' activates
-    the radar, which pings surrounding objects. Pressing '3' activates turrets, which
-    will shoot at nearby objects. You can return to the Sim Mode main menu at any
-    time by pressing 'Escape'."
+    Holding down 'Left-Alt' in either camera switches the camera to free-look mode.
+    The ship has several subsystems. Pressing '1' fires the mining laser, which will
+    destroy asteroids that it hits. This has a heat slider displayed in the UI. Pressing
+    '2' activates the radar, which pings surrounding objects. Pressing '3' activates
+    turrets, which will shoot at nearby objects. You can return to the Sim Mode main
+    menu at any time by pressing 'Escape'.\r\n\r\n In Demo Mode you are presented
+    with a randomly generated asteroid, and can \u2018Left-Click\u2019 it to destroy
+    it. You can spawn a new asteroid by pressing \u2018Enter\u2019, play/pause rotation
+    by pressing \u2018Space\u2019, and return to the main menu by pressing \u2018Escape\u2019."
 --- !u!222 &1710806935
 CanvasRenderer:
   m_ObjectHideFlags: 0

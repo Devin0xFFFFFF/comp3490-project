@@ -98,6 +98,7 @@ namespace Comp3490Project
                 {
                     Laser.LineWidth = Mathf.Lerp(0, 100, accumulatedHeat) + Mathf.PingPong(Time.time, 0.75f) * 200;
                     laserLight.range = Mathf.Lerp(0, 100, accumulatedHeat) + Mathf.PingPong(Time.time, 0.75f) * 200;
+                    laserLight.intensity = Mathf.Lerp(0, 10, accumulatedHeat) + Mathf.PingPong(Time.time, 0.75f) * 20;
                     Laser.EndPos = new Vector3(0, 0, Mathf.Lerp(0, 10000, accumulatedHeat * 4));
 
                     Shoot();
