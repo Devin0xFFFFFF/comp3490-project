@@ -1,6 +1,6 @@
 # Comp 3490 Project README
 
-Our project is impelmented with the use of Unity.
+Our project is implemented with the use of Unity.
 
 To download Unity: https://unity3d.com/get-unity/download
 Building a Unity Project Docs: https://docs.unity3d.com/Manual/PublishingBuilds.html
